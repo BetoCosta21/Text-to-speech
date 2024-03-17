@@ -1,0 +1,178 @@
+
+<html>
+<head>
+<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />    
+<style>
+*{    
+background-color:#000000;
+color:white;
+}
+
+#container{
+    width: 100%;
+    text-align:center;
+    font-size:18px;
+}
+#body{
+    width:100%;max-width:800px;
+    margin:auto;
+    
+}
+#body *{
+    width: 100%;
+}
+input, select, option,textarea{
+    background-color:#25BAD8;
+}
+#enviar{
+    padding:10px;
+    border:1px solid white;
+}
+
+.btn_normal{
+    background-color:black;
+    max-width:200px;
+}
+.btn_normal:hover{
+    cursor:pointer;
+    background-color:#25BAD8;
+    color:black;
+}
+.btn_aguardando{
+    background-color:#25BAD8;
+    color:black;
+    max-width:200px;
+}
+.btn_aguardando:hover{
+    cursor:await;
+    background-color:#25BAD8;
+    color:black;
+}
+textarea{
+    height:400px;
+    resize:none;
+}
+#tube{
+    color:#25BAD8;
+}
+</style>
+<script>
+    function clicked(){
+        //enviar = document.querySelector("#enviar");
+        //enviar.value="Carregando";
+    }
+
+document.addEventListener("DOMContentLoaded", function() {
+  // code...
+
+    const myform = document.getElementById("form1");
+
+    myform.addEventListener("submit", (event) => {
+        //event.preventDefault();
+        enviar = document.querySelector("#enviar");
+        enviar.value="Carregando";
+        enviar.className="btn_aguardando";
+        enviar.disabled=true;
+        intervalo = setInterval(ativa_intervalo,100,enviar);
+        // TODO do something here to show user that form is being submitted
+        fetch(event.target.action, {
+            method: 'POST',
+            body: new URLSearchParams(new FormData(event.target)) // event.target is the form
+        }).then((response) => {
+            if (!response.ok) {
+            throw new Error('HTTP error! Status: ${response.status}');
+            }
+            enviar.value="Gerar Fala";
+            enviar.className="btn_normal";
+            enviar.disabled=false;
+            clearInterval(intervalo);
+            return response.json(); // or response.text() or whatever the server sends
+        }).then((body) => {
+            // TODO handle body
+        }).catch((error) => {
+            // TODO handle error
+        });
+    });
+
+    document.getElementById("texto").addEventListener("keyup", (event) => {
+    
+       if(event.target.value.length>=4096){
+            alert("Atenção, seu texto pode ter Excedido 4096 caracteres e ter sido Cortado!\nVerifique e faça a narração em partes!\nNote que esse é um limite da Própria OPEN-AI");
+       };
+       document.getElementById("total").innerText="Total Caracteres: "+event.target.value.length;
+    
+    });
+
+});
+let indice=0;
+let moviment = new Array(4);
+    moviment[0]='|';
+    moviment[1]='/';
+    moviment[2]='--';
+    moviment[3]='\\';
+
+function get_moviment(){
+    indice++;
+    if(indice>3) indice=0;
+
+    return moviment[indice];
+
+}
+let intervalo='';
+
+function ativa_intervalo(enviar){
+
+    enviar.value="Carregando "+get_moviment();
+
+}
+
+
+</script>
+
+</head>
+<body>
+ 
+<center> <h1>Texto pra Fala OpenAI (<small><a href="https://youtube.com/@AndersonMak" target="_blank" id="tube">@AndersonMak</a></small>) </h1> </center>
+<div id="container">
+    <div id="body">
+<form action="" method="POST" id="form1" name="form1">  
+<p>
+    API KEY "OpenAI": <input type="text" name="API_KEY" value="">
+</p>
+<p>
+Modelo TTS: <select name="modelo_tts">
+    <option value="tts-1" selected>TTS-1</option>
+    <option value="tts-1-hd" >TTS-1-HD</option>
+</select>
+</p>
+<p>
+Voz: <select name="voz">
+    <option value="alloy" >Alloy</option>
+    <option value="echo" >Echo</option>
+    <option value="fable" >Fable</option>
+    <option value="onyx" >Onyx</option>
+    <option value="nova" >Nova</option>
+    <option value="shimmer" >Shimmer</option>
+</select>
+</p>
+<p>
+Velocidade:    
+<select name="speed">
+    <option value="0.25" >0.25</option><option value="0.5" >0.5</option><option value="0.75" >0.75</option><option value="1" selected>1</option><option value="1.25" >1.25</option><option value="1.5" >1.5</option><option value="1.75" >1.75</option><option value="2" >2</option><option value="2.25" >2.25</option><option value="2.5" >2.5</option><option value="2.75" >2.75</option><option value="3" >3</option><option value="3.25" >3.25</option><option value="3.5" >3.5</option><option value="3.75" >3.75</option><option value="4" >4</option>    
+
+</select>
+</p>
+<p>
+Texto: <textarea name="texto" id="texto" maxlength="4096"></textarea>
+<br><span id="total">Total Caracteres: 0</span>
+</p>
+<p>
+<input type="submit" class="btn_normal" id="enviar" value="Gerar Fala">
+</p>
+</form>
+
+</div>
+</div>
+</body>
+</html>
