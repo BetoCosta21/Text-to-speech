@@ -97,8 +97,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById("texto").addEventListener("keyup", (event) => {
     
-       if(event.target.value.length>=10000){
-            alert("Atenção, seu texto pode ter Excedido 10000 caracteres e ter sido Cortado!\nVerifique e faça a narração em partes!\nNote que esse é um limite da Própria OPEN-AI");
+       if(event.target.value.length>=4096){
+            alert("Atenção, seu texto pode ter Excedido 4096 caracteres e ter sido Cortado!\nVerifique e faça a narração em partes!\nNote que esse é um limite da Própria OPEN-AI");
        };
        document.getElementById("total").innerText="Total Caracteres: "+event.target.value.length;
     
@@ -133,7 +133,7 @@ function ativa_intervalo(enviar){
 </head>
 <body>
  
-<center> <h1>Texto pra Fala OpenAI - Beto Costa (<small><a href="https://youtube.com/@RedeAudioLivros" target="_blank" id="tube">@RedeAudioLivros</a></small>) </h1> </center>
+<center> <h1>Texto pra Fala OpenAI (<small><a href="https://youtube.com/@AndersonMak" target="_blank" id="tube">@AndersonMak</a></small>) </h1> </center>
 <div id="container">
     <div id="body">
 <form action="" method="POST" id="form1" name="form1">  
